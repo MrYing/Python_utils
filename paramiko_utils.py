@@ -26,7 +26,7 @@ def ssh2(host,cmd):
         
     except Exception,e:  
         logging.info(e)
-        
+    print info    
     return info
 
 
@@ -48,6 +48,10 @@ def ssh2_trust(host,cmd):
     return info
 
 def ssh2_deploy(host,username,password,cmd):  
+    print "============host,username#=###======================"
+    print host
+    print username
+    print password
     try:
         out_info = ''
         ssh = paramiko.SSHClient()
@@ -55,7 +59,7 @@ def ssh2_deploy(host,username,password,cmd):
         
         ssh.connect(host,username=username, password=password,port = 22,timeout=2000)
         logging.info(cmd)
-        stdin, stdout, stderr = ssh.exec_command(cmd,timeout=1200)
+        stdin, stdout, stderr = ssh.exec_command(cmd)
         out_info = stdout.readlines()
         logging.info(out_info)        
         
@@ -66,18 +70,18 @@ def ssh2_deploy(host,username,password,cmd):
 
 def ssh2_deploy_log(host,username,password,cmd):
     try:
-        #out_info = []
+        out_info = []
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         ssh.connect(host,username=username, password=password,port = 22,timeout=2000)
         logging.info(cmd)
-        stdin, stdout, stderr = ssh.exec_command(cmd,timeout=1200)
+        stdin, stdout, stderr = ssh.exec_command(cmd)
         out_info = stdout.read().decode('gbk','ignore').encode('utf-8');
 
     except Exception,e:
         logging.info(e)
-
+    print out_info
     return out_info
 
 import select
@@ -148,11 +152,21 @@ def establishtrust(ip,hostname):
     except pexpect.EOF,pexpect.TIMEOUT:
         ssh_root.close()
 
-
+'''
 def main():
-
-  ssh2_deploy("192.168.91.132","root","rootroot","uptime")
-
+  host_ip="192.168.91.132"
+  username="tapp"
+  password_user="tapp!Pass"
+  logfile_req="appsrv01-20161008.log"
+  line_req="1"
+  linenumber=1
+  script_name = "start-appsrv01.sh"
+  #ssh2("192.168.91.132","uptime")
+  #ssh2_deploy("192.168.91.132","root","rootroot","uptime")
+  #ssh2_dep = ssh2_deploy(host_ip, username, password_user, r'/home/tapp/'+script_name+' 2>&1 & ;')
+  #ssh2_deploy_log(host_ip, username, password_user, r"line=`wc -l "+logfile_req+"|awk '{print $1}'`;echo ${line};sed -n "+line_req+",${line}p "+logfile_req+"")
+  ssh2_deploy_log(host_ip, username, password_user, r"a=`wc -l deploy.log | awk '{print $1}'`;echo ${a};sed -n "+str(linenumber)+",${a}p deploy.log")
 
 if __name__ == '__main__':
     main()
+'''
